@@ -6,6 +6,12 @@ from PIL import Image
 from os import listdir
 from os.path import isfile, join
 
+"""
+    To.do
+    - make class for dataset with batch size
+    - the class need to split data into train and test
+    
+"""
 
 def check_dataset():
     directory_path = 'resources/flowers/'

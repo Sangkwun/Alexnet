@@ -3,6 +3,13 @@ import tensorflow as tf
 from model import alexnet
 from data import read_dataset, image_to_array, path_to_4dtensor
 
+
+"""
+    To.do
+    - Apply tensorboard callback
+    
+"""
+
 # Setting for learning
 batch_size = 200
 iteration = 20

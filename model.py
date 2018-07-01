@@ -60,7 +60,7 @@ def alexnet(width=227, height=227, classes=5, dropout=0.5, batchnorm = True):
     L7 = tf.layers.dropout(L7, dropout, is_training, name='drop7')
     print(L7.shape)
 
-    model = tf.layers.dense(L7, classes, activation=None, name='dense8') # 10
+    model = tf.layers.dense(L7, classes, activation=None, name='dense8') # 5
     print(model.shape)
 
     cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=model, labels=Y))

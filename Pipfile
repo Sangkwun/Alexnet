@@ -11,10 +11,10 @@ url = "https://pypi.python.org/simple"
 
 [packages]
 
-numpy = "*"
-tensorflow = "*"
-pillow = "*"
-pandas = "*"
+numpy = "1.14.5"
+tensorflow = "1.8.0"
+pillow = "5.1.0"
+pandas = "0.23.1"
 
 
 [requires]
