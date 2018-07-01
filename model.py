@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-def alexnet(width=227, height=227, classes=10, dropout=0.5, batchnorm = True):
+def alexnet(width=227, height=227, classes=5, dropout=0.5, batchnorm = True):
 
     """
         (?, 227, 227, 3)
@@ -15,12 +15,12 @@ def alexnet(width=227, height=227, classes=10, dropout=0.5, batchnorm = True):
         (?, 10)
     """
 
-    # Input shape is 224, 224, 3
+    # Input shape is 227, 227, 3
     X = tf.placeholder(tf.float32, [None, width, height, 3])
     print(X.shape)
 
     # Output is for Pascal VOC 10 classes
-    Y = tf.placeholder(tf.float32, [None, 10])
+    Y = tf.placeholder(tf.float32, [None, classes])
     is_training = tf.placeholder(tf.bool)
 
     # First convolutional layer
@@ -63,6 +63,7 @@ def alexnet(width=227, height=227, classes=10, dropout=0.5, batchnorm = True):
     model = tf.layers.dense(L7, classes, activation=None, name='dense8') # 10
     print(model.shape)
 
-    return model
+    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=model, labels=Y))
+    optimizer = tf.train.AdamOptimizer(0.0001).minimize(cost)
 
-alexnet()
+    return X, Y, is_training, cost, optimizer
