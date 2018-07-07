@@ -18,7 +18,7 @@ you can just install all requirements with pipenv install. <br/>
 - tensorflow: 1.8.0
 
 
-### Dataset
+## Dataset
 
 For training alexnet flower dataset used. There are 4242 images about 5 classes of flowers. <br/>
 It's divided in directory of flower names so easy to handle it.

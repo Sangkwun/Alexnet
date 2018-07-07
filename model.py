@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-def alexnet(width=227, height=227, classes=5, dropout=0.5, batchnorm = True):
+def alexnet(width=227, height=227, classes=5, dropout=1, batchnorm = True):
 
     """
         (?, 227, 227, 3)
@@ -12,7 +12,7 @@ def alexnet(width=227, height=227, classes=5, dropout=0.5, batchnorm = True):
         (?, 6, 6, 256)
         (?, 4096)
         (?, 4096)
-        (?, 10)
+        (?, 5)
     """
 
     # Input shape is 227, 227, 3
@@ -64,6 +64,9 @@ def alexnet(width=227, height=227, classes=5, dropout=0.5, batchnorm = True):
     print(model.shape)
 
     cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=model, labels=Y))
-    optimizer = tf.train.AdamOptimizer(0.0001).minimize(cost)
+    optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
 
-    return X, Y, is_training, cost, optimizer
+    is_correct = tf.equal(tf.argmax(model, 1), tf.argmax(Y, 1))
+    accuracy = tf.reduce_mean(tf.cast(is_correct, tf.float32))
+
+    return X, Y, is_training, cost, optimizer, accuracy, is_correct

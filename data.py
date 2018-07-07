@@ -5,12 +5,12 @@ import tensorflow as tf
 from PIL import Image
 from os import listdir
 from os.path import isfile, join
-
+from sklearn.model_selection import train_test_split 
 """
     To.do
     - make class for dataset with batch size
     - the class need to split data into train and test
-    
+
 """
 
 def check_dataset():
@@ -32,8 +32,8 @@ def check_dataset():
     df.to_csv('resources/dataset.csv', sep=',')
 
 
-def read_dataset():
-    df = pd.read_csv('resources/dataset.csv', sep=',', header=0, index_col=0)
+def read_dataset(path='resources/dataset.csv'):
+    df = pd.read_csv(path, sep=',', header=0, index_col=0)
 
     return df
 
@@ -55,3 +55,6 @@ def path_to_4dtensor(paths, batch_size, num_iter):
     arr = np.stack(arr,axis=0)
 
     return arr
+
+if __name__ == "__main__":
+    print(split_dataset())
