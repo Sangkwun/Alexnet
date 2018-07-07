@@ -16,16 +16,12 @@ test_path =  'resources/test_dataset.csv'
 
 
 # Setting for learning
-batch_size = 30
-iteration = 1
-epochs = 100
+batch_size = 100
+iteration = 10
+epochs = 10
+valid_size = 5
 
-X, Y, is_training, cost, optimizer, accuracy, is_correct = alexnet()
-
-# Initialize valuables
-init = tf.global_variables_initializer()
-sess = tf.Session()
-sess.run(init)
+X, Y, is_training, cost, optimizer, accuracy, merged = alexnet()
 
 # Read dataset.
 classes = ['daisy', 'dandelion', 'rose', 'sunflower', 'tulip']
@@ -34,6 +30,17 @@ valid = read_dataset(valid_path)
 tran_labels = train[classes]
 valid_labels = valid[classes]
 
+sess = tf.Session()
+
+# For tensorboard
+logdir='log/'
+train_writer = tf.summary.FileWriter(logdir + '/train', sess.graph)
+valid_writer = tf.summary.FileWriter(logdir + '/valid')
+
+# Initialize valuables
+init = tf.global_variables_initializer()
+sess.run(init)
+
 for e in range(epochs):
     for i in range(iteration):
         # Training
@@ -41,13 +48,16 @@ for e in range(epochs):
         print(batch_size * i, batch_size * (i + 1))
         label = tran_labels[batch_size * i: batch_size * (i + 1)]
         #print(label)
-        acc, _, cost_val, correct = sess.run([accuracy, optimizer, cost, is_correct], feed_dict={X: x_input, Y: label, is_training: True})
+        acc, _, cost_val, summary = sess.run([accuracy, optimizer, cost, merged], feed_dict={X: x_input, Y: label, is_training: True})
+        
+        train_writer.add_summary(summary, i + (e * iteration))
 
         print('Training Epoch:', '%04d' % (i + 1), 'Avg. acc =', '{:.4f}'.format(acc), 'Avg. cost =', '{:.4f}'.format(cost_val))
         #print(correct)
         # Validation check
-        x_input = path_to_4dtensor(paths=valid['path'], batch_size=20, num_iter=1)
-        label = valid_labels[0:20]
+        x_input = path_to_4dtensor(paths=valid['path'], batch_size=valid_size, num_iter=1)
+        label = valid_labels[0:valid_size]
 
-        acc, cost_val = sess.run([accuracy, cost], feed_dict={X: x_input, Y: label, is_training: False})
+        acc, cost_val, summary = sess.run([accuracy, cost, merged], feed_dict={X: x_input, Y: label, is_training: False})
         print('Validation Epoch:', '%04d' % (i + 1), 'Avg. acc =', '{:.4f}'.format(acc), 'Avg. cost =', '{:.4f}'.format(cost_val))
+        valid_writer.add_summary(summary, i + (e * iteration))

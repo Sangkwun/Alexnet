@@ -1,6 +1,18 @@
 import tensorflow as tf
 
 
+def variable_summaries(var, name):
+  """Attach a lot of summaries to a Tensor."""
+  with tf.name_scope('summaries'):
+    mean = tf.reduce_mean(var)
+    tf.summary.scalar('mean/' + name, mean)
+    with tf.name_scope('stddev'):
+      stddev = tf.sqrt(tf.reduce_sum(tf.square(var - mean)))
+    tf.summary.scalar('sttdev/' + name, stddev)
+    tf.summary.scalar('max/' + name, tf.reduce_max(var))
+    tf.summary.scalar('min/' + name, tf.reduce_min(var))
+    tf.summary.histogram(name, var)
+
 def alexnet(width=227, height=227, classes=5, dropout=1, batchnorm = True):
 
     """
@@ -63,10 +75,21 @@ def alexnet(width=227, height=227, classes=5, dropout=1, batchnorm = True):
     model = tf.layers.dense(L7, classes, activation=None, name='dense8') # 5
     print(model.shape)
 
-    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=model, labels=Y))
-    optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
+    with tf.name_scope('cost'):
+        cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=model, labels=Y))
+        variable_summaries(cost, '/cost')
 
-    is_correct = tf.equal(tf.argmax(model, 1), tf.argmax(Y, 1))
-    accuracy = tf.reduce_mean(tf.cast(is_correct, tf.float32))
+    with tf.name_scope('train'):
+        optimizer = tf.train.AdamOptimizer(0.001).minimize(cost)
 
-    return X, Y, is_training, cost, optimizer, accuracy, is_correct
+    with tf.name_scope('accuracy'):
+        with tf.name_scope('correct_prediction'):
+            is_correct = tf.equal(tf.argmax(model, 1), tf.argmax(Y, 1))
+        with tf.name_scope('accuracy'):
+            accuracy = tf.reduce_mean(tf.cast(is_correct, tf.float32))
+        
+        variable_summaries(accuracy, '/accuracy')
+
+    merged = tf.summary.merge_all()
+
+    return X, Y, is_training, cost, optimizer, accuracy, merged
