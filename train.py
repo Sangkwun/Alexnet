@@ -41,6 +41,12 @@ valid_writer = tf.summary.FileWriter(logdir + '/valid')
 init = tf.global_variables_initializer()
 sess.run(init)
 
+# For saving model
+saver = tf.train.Saver()
+saver.save(sess, 'weights/flower/')
+
+min_cost = None
+
 for e in range(epochs):
     for i in range(iteration):
         # Training
@@ -61,3 +67,9 @@ for e in range(epochs):
         acc, cost_val, summary = sess.run([accuracy, cost, merged], feed_dict={X: x_input, Y: label, is_training: False})
         print('Validation Epoch:', '%04d' % (i + 1), 'Avg. acc =', '{:.4f}'.format(acc), 'Avg. cost =', '{:.4f}'.format(cost_val))
         valid_writer.add_summary(summary, i + (e * iteration))
+
+        if cost_val is None and cost_val < min_cost:
+            min_cost = cost_val
+            saver.save(sess, "my_test_model", global_step=i + (e * iteration))
+
+            
