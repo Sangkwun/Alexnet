@@ -16,6 +16,7 @@ test_path =  'resources/test_dataset.csv'
 
 X, Y, is_training, cost, optimizer, accuracy, merged, model = alexnet(dropout=1)
 
+
 # Read dataset.
 classes = ['daisy', 'dandelion', 'rose', 'sunflower', 'tulip']
 train = read_dataset(train_path)
@@ -44,6 +45,7 @@ sess.run(init)
 
 # For saving model
 saver = tf.train.Saver()
+
 saver.save(sess, 'weights/')
 
 min_cost = None
@@ -53,7 +55,6 @@ for e in range(epochs):
         # Training
         x_input = path_to_4dtensor(paths=train['path'], batch_size=batch_size, num_iter=i)
         label = tran_labels[batch_size * i: batch_size * (i + 1)]
-
         acc, _, cost_val, summary = sess.run([accuracy, optimizer, cost, merged], feed_dict={X: x_input, Y: label, is_training: True})
         
         train_writer.add_summary(summary, i + (e * iteration))
@@ -74,4 +75,3 @@ for e in range(epochs):
                 if cost_val < min_cost:
                     min_cost = cost_val
                     saver.save(sess, "weights/", global_step=i + (e * iteration))
-

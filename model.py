@@ -93,4 +93,5 @@ def alexnet(width=227, height=227, classes=5, dropout=0.5, batchnorm = True):
 
     merged = tf.summary.merge_all()
 
+
     return X, Y, is_training, cost, optimizer, accuracy, merged, model
