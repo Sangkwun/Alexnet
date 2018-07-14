@@ -39,6 +39,8 @@ train.py train model with above csv file.
 
 ![alt text](https://github.com/Sangkwun/Alexnet/blob/master/accuracy.png)
 
+![alt text](https://github.com/Sangkwun/Alexnet/blob/master/cost.png)
+
 ## Inference
 
 It doesn't have command yet.
