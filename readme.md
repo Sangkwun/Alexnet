@@ -37,7 +37,7 @@ train.py train model with above csv file.
 - tensorboard log will be saved in logdir
 - weights will be saved in weights
 
-![alt text](https://www.google.com/logos/doodles/2018/world-cup-2018-day-24-be-5994561313701888-s.png)
+![alt text](https://github.com/Sangkwun/Alexnet/blob/master/accuracy.png)
 
 ## Inference
 
