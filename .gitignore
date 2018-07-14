@@ -1,0 +1,8 @@
+.vscode
+dataset
+resources/flowers
+log
+weights
+logdir/
+log/
+
